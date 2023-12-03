@@ -16,86 +16,81 @@ function setTimer() {
         isComplete: false
     };
 
-    timers.push(timer);
-
     // Display the timer
     const currentDiv = document.getElementById("list");
     currentDiv.classList.add("displayy");
 
     // Check if there are no timers
-    if (timers.length === 1) {
+    if (timers.length === 0) {
         // No timers, remove any existing message
         const noTimersMessage = document.querySelector("#list p");
         if (noTimersMessage) {
             currentDiv.removeChild(noTimersMessage);
         }
+    }
 
-        // Create a div to hold the timer display and stop button
-        const timerContainer = document.createElement("div");
-        timerContainer.classList.add("timer-container");
+    // Create a div to hold the timer display and stop button
+    const timerContainer = document.createElement("div");
+    timerContainer.classList.add("timer-container");
 
-        // Timer display
-        const timerDisplay = document.createElement("p");
+    // Timer display
+    const timerDisplay = document.createElement("p");
 
-        // Stop button
-        const stopButton = document.createElement("button");
-        stopButton.textContent = "Stop";
-        stopButton.addEventListener("click", function() {
-            stopTimer(timer, timerContainer);
-        });
+    // Stop button
+    const stopButton = document.createElement("button");
+    stopButton.textContent = "Stop";
+    stopButton.addEventListener("click", function() {
+        stopTimer(timer, timerContainer);
+    });
 
-        // Append display and button to the timer container
-        timerContainer.appendChild(timerDisplay);
-        timerContainer.appendChild(stopButton);
+    // Append display and button to the timer container
+    timerContainer.appendChild(timerDisplay);
+    timerContainer.appendChild(stopButton);
 
-        // Append the timer container to the display
-        timerContainer.style.marginBottom = "10px"; // Adjust the value as needed
-        currentDiv.appendChild(timerContainer);
+    // Append the timer container to the display
+    timerContainer.style.marginBottom = "10px"; // Adjust the value as needed
+    currentDiv.appendChild(timerContainer);
 
-        // Start the timer
-        timer.intervalId = setInterval(function() {
-            if (timer.seconds > 0 || timer.minutes > 0 || timer.hours > 0) {
-                // Timer is still running
-                if (timer.seconds > 0) {
-                    timer.seconds--;
+    // Add the timer to the array
+    timers.push(timer);
+
+    // Start the timer
+    timer.intervalId = setInterval(function() {
+        if (timer.seconds > 0 || timer.minutes > 0 || timer.hours > 0) {
+            // Timer is still running
+            if (timer.seconds > 0) {
+                timer.seconds--;
+            } else {
+                if (timer.minutes > 0) {
+                    timer.minutes--;
+                    timer.seconds = 59;
                 } else {
-                    if (timer.minutes > 0) {
-                        timer.minutes--;
+                    if (timer.hours > 0) {
+                        timer.hours--;
+                        timer.minutes = 59;
                         timer.seconds = 59;
-                    } else {
-                        if (timer.hours > 0) {
-                            timer.hours--;
-                            timer.minutes = 59;
-                            timer.seconds = 59;
-                        }
                     }
                 }
-                // Update the timer display
-                timerDisplay.textContent = `Time left : ${timer.hours}h ${timer.minutes}m ${timer.seconds}s`;
-                timerDisplay.style.marginLeft = "140px";
-            } else {
-                // Timer reached 0, clear interval
-                clearInterval(timer.intervalId);
-
-                timerDisplay.textContent = "Time is up!";
-                timer.isComplete = true;
-
-                stopButton.textContent = "Delete";
-
-                timerDisplay.style.marginLeft = "270px";
-                timerContainer.style.backgroundColor = "#F0F757";
-                timerDisplay.style.color = "#34344A";
-                stopButton.style.backgroundColor = "#34344A";
-                stopButton.style.color = "#FFF";
             }
-        }, 1000);
-    } else {
-        // There are existing timers, remove any "No timers" message
-        const noTimersMessage = document.querySelector("#list p");
-        if (noTimersMessage) {
-            currentDiv.removeChild(noTimersMessage);
+            // Update the timer display
+            timerDisplay.textContent = `Time left : ${timer.hours}h ${timer.minutes}m ${timer.seconds}s`;
+            timerDisplay.style.marginLeft = "140px";
+        } else {
+            // Timer reached 0, clear interval
+            clearInterval(timer.intervalId);
+
+            timerDisplay.textContent = "Time is up!";
+            timer.isComplete = true;
+
+            stopButton.textContent = "Delete";
+
+            timerDisplay.style.marginLeft = "270px";
+            timerContainer.style.backgroundColor = "#F0F757";
+            timerDisplay.style.color = "#34344A";
+            stopButton.style.backgroundColor = "#34344A";
+            stopButton.style.color = "#FFF";
         }
-    }
+    }, 1000);
 }
 
 // Function to stop a timer
